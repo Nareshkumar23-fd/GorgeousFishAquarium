@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Corben:wght@400;700&family=Niconne&family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,select,option,
+ul,
+li {
+    font-family: "Corben", serif;
+}
+
+p {
+    font-family: "Outfit", sans-serif;
+}
+
+span {
+    font-family: "Outfit", sans-serif;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-out;
+}
