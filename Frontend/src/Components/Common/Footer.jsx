@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   // Animation variants
@@ -30,24 +31,31 @@ const Footer = () => {
   ];
 
   const infoLinks = [
-    "Specials",
-    "New Products",
-    "Top Sellers",
-    "About Us",
+    { name: "Home", path: "/" },
+    { name: "Shop", path: "/shop" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
   ];
 
   const accountLinks = [
-    "Login / Register",
-    "My Orders",
-    "Wishlist",
-    "Cart",
+    { name: "Login / Register", path: "/login" },
+    { name: "My Orders", path: "/orders" },
+    { name: "Wishlist", path: "/wishlist" },
+    { name: "Cart", path: "/cart" },
   ];
 
   const supportLinks = [
-    "Shipping",
-    "Returns",
-    "Order Tracking",
-    "Help",
+    { name: "Shipping", path: "/shipping" },
+    { name: "Returns", path: "/returns" },
+    { name: "Order Tracking", path: "/tracking" },
+    { name: "Help", path: "/help" },
+  ];
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Shop", path: "/shop" },
+    { name: "About Us", path: "/about" },
+    { name: "Contact", path: "/contact" },
   ];
 
   return (
@@ -94,6 +102,27 @@ const Footer = () => {
         .footer-top-strip {
           border-bottom: 1px solid rgba(234,246,246,0.08);
           background: rgba(7,21,29,0.6);
+          padding: 0.8rem 0;
+        }
+
+        .footer-top-strip-inner {
+          max-width: 1440px;
+          margin: 0 auto;
+          padding: 0 2rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+          .footer-top-strip-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            padding: 0 1.5rem;
+          }
         }
 
         .footer-strip-item {
@@ -111,15 +140,47 @@ const Footer = () => {
 
         .footer-strip-item .label {
           color: rgba(234,246,246,0.4);
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           font-family: 'JetBrains Mono', monospace;
           letter-spacing: 0.06em;
         }
 
+        .footer-strip-nav {
+          display: flex;
+          gap: 1.5rem;
+          align-items: center;
+        }
+
+        .footer-strip-nav a {
+          color: rgba(234,246,246,0.5);
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          font-family: 'JetBrains Mono', monospace;
+        }
+
+        .footer-strip-nav a:hover {
+          color: var(--aqua);
+        }
+
+        @media (max-width: 768px) {
+          .footer-strip-nav {
+            flex-wrap: wrap;
+            gap: 0.8rem;
+          }
+          
+          .footer-strip-nav a {
+            font-size: 0.65rem;
+          }
+        }
+
         /* MAIN SECTION */
         .footer-main {
-          padding: 4rem 2rem 3rem;
+          max-width: 1440px;
           margin: 0 auto;
+          padding: 4rem 2rem 3rem;
           display: grid;
           grid-template-columns: 1.5fr 1fr 1fr 1fr;
           gap: 3rem;
@@ -160,19 +221,22 @@ const Footer = () => {
           display: flex;
           gap: 1.2rem;
           margin-top: 1.5rem;
+          flex-wrap: wrap;
         }
 
         .footer-social a {
           color: rgba(234,246,246,0.5);
-          font-size: 0.85rem;
+          font-size: 0.8rem;
           font-weight: 500;
           transition: all 0.3s ease;
           cursor: pointer;
           text-decoration: none;
-          padding: 0.3rem 0.6rem;
-          border-radius: 6px;
+          padding: 0.3rem 0.8rem;
           background: rgba(79,216,196,0.06);
           border: 1px solid rgba(79,216,196,0.08);
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
         }
 
         .footer-social a:hover {
@@ -211,15 +275,17 @@ const Footer = () => {
           gap: 0.6rem;
         }
 
-        .footer-links li {
+        .footer-links a {
           color: rgba(234,246,246,0.55);
           font-size: 0.88rem;
           cursor: pointer;
           transition: all 0.3s ease;
           padding: 0.3rem 0;
+          text-decoration: none;
+          display: inline-block;
         }
 
-        .footer-links li:hover {
+        .footer-links a:hover {
           color: var(--aqua);
           transform: translateX(6px);
         }
@@ -228,16 +294,27 @@ const Footer = () => {
         .footer-newsletter {
           border-top: 1px solid rgba(234,246,246,0.06);
           background: rgba(7,21,29,0.4);
-          padding: 1.5rem 2rem;
+          padding: 1.5rem 0;
         }
 
         .footer-newsletter-inner {
+          max-width: 1440px;
           margin: 0 auto;
+          padding: 0 2rem;
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 1.5rem;
           flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+          .footer-newsletter-inner {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            padding: 0 1.5rem;
+          }
         }
 
         .footer-newsletter-text {
@@ -259,18 +336,37 @@ const Footer = () => {
           min-width: 280px;
         }
 
+        @media (max-width: 768px) {
+          .footer-newsletter-form {
+            max-width: none;
+            min-width: auto;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .footer-newsletter-form {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+        }
+
         .footer-newsletter-form input {
           flex: 1;
           padding: 0.7rem 1rem;
           font-size: 0.88rem;
           border: 1.5px solid rgba(234,246,246,0.12);
           border-right: none;
-          border-radius: 8px 0 0 8px;
           outline: none;
           background: rgba(234,246,246,0.06);
           color: var(--foam);
           font-family: 'Plus Jakarta Sans', sans-serif;
           transition: border-color 0.3s ease;
+        }
+
+        @media (max-width: 480px) {
+          .footer-newsletter-form input {
+            border-right: 1.5px solid rgba(234,246,246,0.12);
+          }
         }
 
         .footer-newsletter-form input::placeholder {
@@ -289,11 +385,16 @@ const Footer = () => {
           font-size: 0.85rem;
           font-weight: 600;
           border: none;
-          border-radius: 0 8px 8px 0;
           cursor: pointer;
           transition: all 0.3s ease;
           font-family: 'Plus Jakarta Sans', sans-serif;
           white-space: nowrap;
+        }
+
+        @media (max-width: 480px) {
+          .footer-newsletter-form button {
+            width: 100%;
+          }
         }
 
         .footer-newsletter-form button:hover {
@@ -317,68 +418,41 @@ const Footer = () => {
           color: var(--aqua);
           opacity: 0.5;
         }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-          .footer-newsletter-inner {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 1rem;
-          }
-
-          .footer-newsletter-form {
-            max-width: none;
-            min-width: auto;
-          }
-
-          .footer-top-strip {
-            display: none;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .footer-newsletter-form {
-            flex-direction: column;
-            gap: 0.5rem;
-          }
-
-          .footer-newsletter-form input {
-            border-radius: 8px;
-            border-right: 1.5px solid rgba(234,246,246,0.12);
-          }
-
-          .footer-newsletter-form button {
-            border-radius: 8px;
-            width: 100%;
-          }
-        }
       `}</style>
 
       {/* TOP INFO STRIP */}
-      <motion.div 
+      <motion.div
         className="footer-top-strip"
         variants={itemVariants}
       >
-        <div className="mx-auto px-4 py-3 flex flex-col md:flex-row justify-between gap-2 text-sm ">
+        <div className="footer-top-strip-inner">
+          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+            <div className="footer-strip-item">
+              <span className="icon">📞</span>
+              <span>0123456789</span>
+              <span className="label">Free support line</span>
+            </div>
 
+            <div className="footer-strip-item">
+              <span className="icon">📧</span>
+              <span>support@aquahome.in</span>
+              <span className="label">Orders support</span>
+            </div>
 
-          <div className="footer-strip-item">
-            <span className="icon">📞</span>
-            <span>0123456789</span>
-            <span className="label">Free support line</span>
+            <div className="footer-strip-item">
+              <span className="icon">⏰</span>
+              <span>Mon - Fri / 8:00 - 18:00</span>
+              <span className="label">Working hours</span>
+            </div>
           </div>
 
-          <div className="footer-strip-item">
-            <span className="icon">📧</span>
-            <span>support@aquahome.in</span>
-            <span className="label">Orders support</span>
-          </div>
-
-          <div className="footer-strip-item">
-            <span className="icon">⏰</span>
-            <span>Mon - Fri / 8:00 - 18:00</span>
-            <span className="label">Working hours</span>
-          </div>
+          <nav className="footer-strip-nav">
+            {navLinks.map((link) => (
+              <Link key={link.name} to={link.path}>
+                {link.name}
+              </Link>
+            ))}
+          </nav>
         </div>
       </motion.div>
 
@@ -396,10 +470,11 @@ const Footer = () => {
             {socialLinks.map((social) => (
               <motion.a
                 key={social.name}
+                href="#"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="mr-1">{social.icon}</span>
+                <span>{social.icon}</span>
                 {social.name}
               </motion.a>
             ))}
@@ -411,13 +486,11 @@ const Footer = () => {
           <h3 className="footer-heading">Information</h3>
           <ul className="footer-links">
             {infoLinks.map((link) => (
-              <motion.li
-                key={link}
-                whileHover={{ x: 6 }}
-                transition={{ duration: 0.2 }}
-              >
-                {link}
-              </motion.li>
+              <li key={link.name}>
+                <Link to={link.path}>
+                  {link.name}
+                </Link>
+              </li>
             ))}
           </ul>
         </motion.div>
@@ -427,13 +500,11 @@ const Footer = () => {
           <h3 className="footer-heading">My Account</h3>
           <ul className="footer-links">
             {accountLinks.map((link) => (
-              <motion.li
-                key={link}
-                whileHover={{ x: 6 }}
-                transition={{ duration: 0.2 }}
-              >
-                {link}
-              </motion.li>
+              <li key={link.name}>
+                <Link to={link.path}>
+                  {link.name}
+                </Link>
+              </li>
             ))}
           </ul>
         </motion.div>
@@ -443,20 +514,18 @@ const Footer = () => {
           <h3 className="footer-heading">Customer Service</h3>
           <ul className="footer-links">
             {supportLinks.map((link) => (
-              <motion.li
-                key={link}
-                whileHover={{ x: 6 }}
-                transition={{ duration: 0.2 }}
-              >
-                {link}
-              </motion.li>
+              <li key={link.name}>
+                <Link to={link.path}>
+                  {link.name}
+                </Link>
+              </li>
             ))}
           </ul>
         </motion.div>
       </div>
 
       {/* NEWSLETTER */}
-      <motion.div 
+      <motion.div
         className="footer-newsletter"
         variants={itemVariants}
       >
@@ -466,7 +535,7 @@ const Footer = () => {
             <span>Join our newsletter for latest fish deals</span>
           </div>
 
-          <motion.div 
+          <motion.div
             className="footer-newsletter-form"
             whileHover={{ scale: 1.01 }}
             transition={{ duration: 0.3 }}
@@ -474,7 +543,6 @@ const Footer = () => {
             <input
               type="email"
               placeholder="Enter email address"
-              className="footer-newsletter-input"
             />
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -487,7 +555,7 @@ const Footer = () => {
       </motion.div>
 
       {/* BOTTOM */}
-      <motion.div 
+      <motion.div
         className="footer-bottom"
         variants={itemVariants}
       >

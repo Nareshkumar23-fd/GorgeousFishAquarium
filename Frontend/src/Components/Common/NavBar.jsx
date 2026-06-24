@@ -1,639 +1,942 @@
-import React, { useState } from "react";
-import { Heart, ShoppingCart, Menu, X, Search } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Heart, ShoppingCart, Menu, X, User } from "lucide-react";
 import { assets } from "../../MockData/Assets";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
+import AuthModal from "../UI/AuthModal";
+import CartModal from "../UI/CartModal";
+import WishListModal from "../UI/WishListModal";
 
 const NavBar = () => {
   const [open, setOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [cartModalOpen, setCartModalOpen] = useState(false);
+  const [wishlistModalOpen, setWishlistModalOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
   // Navigation items
   const navItems = ["HOME", "SHOP", "ABOUT", "CONTACT"];
 
+  const handleAuthClick = () => {
+    setAuthModalOpen(true);
+  };
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
+
   return (
-    <nav className="navbar-root sticky top-0 z-50">
-      <style>{`
-        .navbar-root {
-          background: #ffffff;
-          border-bottom: 2px solid #f1f5f9;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        }
+    <>
+      <nav className={`navbar-root ${scrolled ? 'navbar-scrolled' : ''}`}>
+        <style>{`
+          /* ── NO BORDER RADIUS ANYWHERE ── */
+          .navbar-root * {
+            border-radius: 0 !important;
+          }
 
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+          .navbar-root {
+            background: #ffffff;
+            border-bottom: 2px solid #e8edf2;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            box-shadow: 0 2px 20px rgba(10,15,26,0.04);
+            transition: all 0.3s ease;
+            height: 80px;
+          }
 
-        .navbar-root .font-display {
-          font-family: 'Fraunces', serif;
-        }
+          .navbar-scrolled {
+            box-shadow: 0 4px 30px rgba(10,15,26,0.08);
+            border-bottom-color: #dce4eb;
+            height: 72px;
+          }
 
-        /* Custom scrollbar */
-        .navbar-root ::-webkit-scrollbar {
-          width: 4px;
-        }
-        .navbar-root ::-webkit-scrollbar-track {
-          background: #f8fafc;
-        }
-        .navbar-root ::-webkit-scrollbar-thumb {
-          background: #0e8c7f;
-          border-radius: 999px;
-        }
+          @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-        /* Nav container */
-        .nav-container {
-          max-width: 1440px;
-          margin: 0 auto;
-          padding: 0.5rem 2rem;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 1rem;
-        }
+          .navbar-root .font-display {
+            font-family: 'Fraunces', serif;
+          }
+          
+          .navbar-root .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.08em;
+          }
 
-        @media (max-width: 768px) {
+          /* Custom scrollbar */
+          .navbar-root ::-webkit-scrollbar {
+            width: 4px;
+          }
+          .navbar-root ::-webkit-scrollbar-track {
+            background: #f0f4f8;
+          }
+          .navbar-root ::-webkit-scrollbar-thumb {
+            background: #2a9d8f;
+          }
+
+          /* Nav container */
           .nav-container {
-            padding: 0.5rem 1rem;
-          }
-        }
-
-        /* Logo */
-        .nav-logo {
-          flex-shrink: 0;
-          display: flex;
-          align-items: center;
-        }
-
-        .nav-logo img {
-          height: 50px;
-          width: auto;
-          object-fit: contain;
-        }
-
-        @media (min-width: 768px) {
-          .nav-logo img {
-            height: 78px;
-          }
-        }
-
-        /* Desktop Navigation */
-        .nav-desktop {
-          display: none;
-          flex: 1;
-          justify-content: center;
-          padding: 0 2rem;
-        }
-
-        @media (min-width: 768px) {
-          .nav-desktop {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 2rem;
             display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            height: 100%;
+            transition: all 0.3s ease;
           }
-        }
 
-        .nav-desktop ul {
-          display: flex;
-          align-items: center;
-          gap: 2.5rem;
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
+          @media (max-width: 768px) {
+            .nav-container {
+              padding: 0 1rem;
+            }
+          }
 
-        @media (min-width: 1024px) {
+          /* Logo */
+          .nav-logo {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+          }
+
+          .nav-logo img {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+            transition: all 0.3s ease;
+          }
+
+          .navbar-scrolled .nav-logo img {
+            height: 55px;
+          }
+
+          @media (min-width: 768px) {
+            .nav-logo img {
+              height: 85px;
+            }
+            .navbar-scrolled .nav-logo img {
+              height: 65px;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .nav-logo img {
+              height: 95px;
+            }
+            .navbar-scrolled .nav-logo img {
+              height: 70px;
+            }
+          }
+
+          /* Desktop Navigation */
+          .nav-desktop {
+            display: none;
+            flex: 1;
+            justify-content: center;
+            padding: 0 2rem;
+          }
+
+          @media (min-width: 768px) {
+            .nav-desktop {
+              display: flex;
+            }
+          }
+
           .nav-desktop ul {
-            gap: 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
           }
-        }
 
-        .nav-desktop a {
-          color: #475569;
-          font-size: 0.85rem;
-         font-weight: 500;
-          text-decoration: none;
-          letter-spacing: 0.08em;
-          transition: all 0.3s ease;
-          position: relative;
-          padding: 0.5rem 0;
-          text-transform: uppercase;
-        }
+          @media (min-width: 1024px) {
+            .nav-desktop ul {
+              gap: 3.5rem;
+            }
+          }
 
-        .nav-desktop a:hover {
-          color: #0e8c7f;
-        }
+          .nav-desktop a {
+            color: #4a5a6a;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            letter-spacing: 0.12em;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+          }
 
-        .nav-desktop a::after {
-          content: '';
-          position: absolute;
-          bottom: -2px;
-          left: 0;
-          width: 0;
-          height: 2.5px;
-          background: linear-gradient(90deg, #4fd8c4, #0e8c7f);
-          transition: width 0.3s ease;
-          border-radius: 2px;
-        }
+          .nav-desktop a:hover {
+            color: #2a9d8f;
+          }
 
-        .nav-desktop a:hover::after {
-          width: 100%;
-        }
+          .nav-desktop a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #2a9d8f;
+            transition: width 0.3s ease;
+          }
 
-        /* Right Actions */
-        .nav-actions {
-          display: flex;
-          align-items: center;
-          gap: 0.25rem;
-          flex-shrink: 0;
-        }
+          .nav-desktop a:hover::after {
+            width: 100%;
+          }
 
-        @media (min-width: 768px) {
+          .nav-desktop a.active {
+            color: #2a9d8f;
+          }
+
+          .nav-desktop a.active::after {
+            width: 100%;
+          }
+
+          /* Right Actions */
           .nav-actions {
-            gap: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            flex-shrink: 0;
           }
-        }
 
-        .nav-btn {
-          position: relative;
-          padding: 0.5rem;
-          border-radius: 50%;
-          border: none;
-          background: transparent;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #64748b;
-        }
+          @media (min-width: 768px) {
+            .nav-actions {
+              gap: 0.5rem;
+            }
+          }
 
-        .nav-btn:hover {
-          background: #f1f5f9;
-          color: #0e8c7f;
-        }
+          .nav-btn {
+            position: relative;
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7b8b;
+          }
 
-        .nav-btn svg {
-          width: 20px;
-          height: 20px;
-        }
+          .nav-btn:hover {
+            background: rgba(42,157,143,0.06);
+            color: #2a9d8f;
+          }
 
-        @media (min-width: 768px) {
           .nav-btn svg {
             width: 22px;
             height: 22px;
+            transition: all 0.3s ease;
           }
-        }
 
-        /* Badge */
-        .nav-badge {
-          position: absolute;
-          top: -2px;
-          right: -2px;
-          min-width: 18px;
-          height: 18px;
-          padding: 0 5px;
-          border-radius: 999px;
-          font-size: 0.6rem;
-          font-weight: 700;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 2px solid #ffffff;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .nav-badge-heart {
-          background: linear-gradient(135deg, #4fd8c4, #0e8c7f);
-          color: white;
-        }
-
-        .nav-badge-cart {
-          background: linear-gradient(135deg, #4fd8c4, #0e8c7f);
-          color: white;
-        }
-
-        /* Search */
-        .nav-search-desktop {
-          display: none;
-          position: relative;
-          margin-right: 0.5rem;
-        }
-
-        @media (min-width: 768px) {
-          .nav-search-desktop {
-            display: block;
+          .navbar-scrolled .nav-btn svg {
+            width: 20px;
+            height: 20px;
           }
-        }
 
-        .nav-search-desktop input {
-          width: 200px;
-          padding: 0.5rem 1rem 0.5rem 2.5rem;
-          border: 2px solid #e2e8f0;
-          border-radius: 999px;
-          background: #f8fafc;
-          color: #1e293b;
-          font-size: 0.85rem;
-          outline: none;
-          transition: all 0.3s ease;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        @media (min-width: 1024px) {
-          .nav-search-desktop input {
-            width: 260px;
+          @media (min-width: 768px) {
+            .nav-btn svg {
+              width: 24px;
+              height: 24px;
+            }
+            .navbar-scrolled .nav-btn svg {
+              width: 22px;
+              height: 22px;
+            }
           }
-        }
 
-        .nav-search-desktop input::placeholder {
-          color: #94a3b8;
-        }
-
-        .nav-search-desktop input:focus {
-          border-color: #0e8c7f;
-          background: #ffffff;
-          box-shadow: 0 0 0 3px rgba(14,140,127,0.1);
-        }
-
-        .nav-search-desktop .search-icon {
-          position: absolute;
-          left: 0.75rem;
-          top: 50%;
-          transform: translateY(-50%);
-          color: #94a3b8;
-          width: 16px;
-          height: 16px;
-        }
-
-        /* Mobile Search */
-        .nav-search-mobile {
-          padding: 0.75rem 2rem 1.25rem;
-        }
-
-        @media (min-width: 768px) {
-          .nav-search-mobile {
-            display: none;
+          /* Badge */
+          .nav-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s ease;
           }
-        }
 
-        .nav-search-mobile .search-wrapper {
-          position: relative;
-        }
+          .navbar-scrolled .nav-badge {
+            min-width: 18px;
+            height: 18px;
+            font-size: 0.55rem;
+            padding: 0 5px;
+          }
 
-        .nav-search-mobile input {
-          width: 100%;
-          padding: 0.6rem 1rem 0.6rem 2.5rem;
-          border: 2px solid #e2e8f0;
-          border-radius: 999px;
-          background: #f8fafc;
-          color: #1e293b;
-          font-size: 0.85rem;
-          outline: none;
-          transition: all 0.3s ease;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+          .nav-badge-heart {
+            background: #2a9d8f;
+            color: #ffffff;
+          }
 
-        .nav-search-mobile input::placeholder {
-          color: #94a3b8;
-        }
+          .nav-badge-cart {
+            background: #2a9d8f;
+            color: #ffffff;
+          }
 
-        .nav-search-mobile input:focus {
-          border-color: #0e8c7f;
-          background: #ffffff;
-        }
-
-        .nav-search-mobile .search-icon {
-          position: absolute;
-          left: 0.75rem;
-          top: 50%;
-          transform: translateY(-50%);
-          color: #94a3b8;
-          width: 16px;
-          height: 16px;
-        }
-
-        /* Mobile Menu Toggle */
-        .nav-menu-toggle {
-          display: flex;
-          padding: 0.5rem;
-          border-radius: 50%;
-          border: none;
-          background: transparent;
-          cursor: pointer;
-          color: #64748b;
-          transition: all 0.3s ease;
-        }
-
-        .nav-menu-toggle:hover {
-          background: #f1f5f9;
-          color: #0e8c7f;
-        }
-
-        @media (min-width: 768px) {
+          /* Mobile Menu Toggle */
           .nav-menu-toggle {
+            display: flex;
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #6b7b8b;
+            transition: all 0.3s ease;
+          }
+
+          .nav-menu-toggle:hover {
+            background: rgba(42,157,143,0.06);
+            color: #2a9d8f;
+          }
+
+          @media (min-width: 768px) {
+            .nav-menu-toggle {
+              display: none;
+            }
+          }
+
+          .nav-menu-toggle svg {
+            width: 28px;
+            height: 28px;
+            transition: all 0.3s ease;
+          }
+
+          .navbar-scrolled .nav-menu-toggle svg {
+            width: 24px;
+            height: 24px;
+          }
+
+          /* Mobile Drawer Overlay */
+          .nav-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10,15,26,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+          }
+
+          /* Mobile Drawer */
+          .nav-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 320px;
+            max-width: 85vw;
+            background: #ffffff;
+            z-index: 101;
+            box-shadow: -8px 0 32px rgba(10,15,26,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-left: 1px solid #e8edf2;
+          }
+
+          .nav-drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e8edf2;
+            flex-shrink: 0;
+          }
+
+          .nav-drawer-header img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+          }
+
+          .nav-drawer-close {
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #6b7b8b;
+            transition: all 0.3s ease;
+          }
+
+          .nav-drawer-close:hover {
+            background: rgba(42,157,143,0.06);
+            color: #2a9d8f;
+          }
+
+          .nav-drawer-close svg {
+            width: 28px;
+            height: 28px;
+          }
+
+          .nav-drawer-body {
+            padding: 1.5rem;
+            flex: 1;
+            overflow-y: auto;
+          }
+
+          .nav-drawer-body ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+          }
+
+          .nav-drawer-body a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #4a5a6a;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-family: 'JetBrains Mono', monospace;
+          }
+
+          .nav-drawer-body a:hover {
+            color: #2a9d8f;
+            background: rgba(42,157,143,0.06);
+          }
+
+          .nav-drawer-body a.active {
+            color: #2a9d8f;
+            background: rgba(42,157,143,0.06);
+          }
+
+          .nav-drawer-body .drawer-divider {
+            height: 1px;
+            background: #e8edf2;
+            margin: 1rem 0;
+          }
+
+          .nav-drawer-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #e8edf2;
+            flex-shrink: 0;
+          }
+
+          .nav-drawer-footer .drawer-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+          }
+
+          .nav-drawer-footer .drawer-item:hover {
+            background: rgba(42,157,143,0.06);
+          }
+
+          .nav-drawer-footer .drawer-item span {
+            color: #4a5a6a;
+            font-size: 0.9rem;
+            font-weight: 500;
+          }
+
+          .nav-drawer-footer .drawer-item .drawer-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+          }
+
+          .nav-drawer-footer .drawer-item .drawer-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #6b7b8b;
+          }
+
+          .nav-drawer-footer .drawer-badge {
+            padding: 0.15rem 0.7rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            background: #2a9d8f;
+            color: #ffffff;
+          }
+
+          /* User Profile Section */
+          .nav-user-profile {
             display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.5rem 0.25rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
           }
-        }
 
-        /* Mobile Drawer */
-        .nav-drawer-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(15, 23, 42, 0.6);
-          backdrop-filter: blur(4px);
-          z-index: 100;
-        }
-
-        .nav-drawer {
-          position: fixed;
-          top: 0;
-          right: 0;
-          height: 100%;
-          width: 300px;
-          max-width: 85vw;
-          background: #ffffff;
-          z-index: 101;
-          box-shadow: -8px 0 32px rgba(0,0,0,0.1);
-          display: flex;
-          flex-direction: column;
-          overflow-y: auto;
-        }
-
-        .nav-drawer-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 1.25rem 1.5rem;
-          border-bottom: 2px solid #f1f5f9;
-          flex-shrink: 0;
-        }
-
-        .nav-drawer-header img {
-          height: 40px;
-          width: auto;
-          object-fit: contain;
-        }
-
-        .nav-drawer-close {
-          padding: 0.5rem;
-          border-radius: 50%;
-          border: none;
-          background: transparent;
-          cursor: pointer;
-          color: #64748b;
-          transition: all 0.3s ease;
-        }
-
-        .nav-drawer-close:hover {
-          background: #f1f5f9;
-          color: #1e293b;
-        }
-
-        .nav-drawer-close svg {
-          width: 24px;
-          height: 24px;
-        }
-
-        .nav-drawer-body {
-          padding: 1.5rem;
-          flex: 1;
-          overflow-y: auto;
-        }
-
-        .nav-drawer-body ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-        }
-
-        .nav-drawer-body a {
-          display: block;
-          padding: 0.75rem 1rem;
-          color: #475569;
-          font-size: 0.95rem;
-          font-weight: 600;
-          text-decoration: none;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-          letter-spacing: 0.04em;
-          text-transform: uppercase;
-        }
-
-        .nav-drawer-body a:hover {
-          color: #0e8c7f;
-          background: #f0fdfa;
-        }
-
-        .nav-drawer-footer {
-          padding: 1.5rem;
-          border-top: 2px solid #f1f5f9;
-          flex-shrink: 0;
-        }
-
-        .nav-drawer-footer .drawer-item {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0.6rem 1rem;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-          margin-bottom: 0.25rem;
-        }
-
-        .nav-drawer-footer .drawer-item:hover {
-          background: #f1f5f9;
-        }
-
-        .nav-drawer-footer .drawer-item span {
-          color: #475569;
-          font-size: 0.9rem;
-          font-weight: 500;
-        }
-
-        .nav-drawer-footer .drawer-badge {
-          padding: 0.15rem 0.7rem;
-          border-radius: 999px;
-          font-size: 0.7rem;
-          font-weight: 600;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .drawer-badge-heart {
-          background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-          color: white;
-        }
-
-        .drawer-badge-cart {
-          background: linear-gradient(135deg, #4fd8c4, #0e8c7f);
-          color: white;
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-          .nav-container {
-            padding: 0.35rem 0.75rem;
+          @media (min-width: 768px) {
+            .nav-user-profile {
+              display: flex;
+            }
           }
-          
-          .nav-logo img {
-            height: 38px;
+
+          .nav-user-profile:hover {
+            border-color: #2a9d8f;
+            background: rgba(42,157,143,0.06);
           }
-          
-          .nav-btn {
-            padding: 0.35rem;
+
+          .nav-user-profile .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: rgba(42,157,143,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2a9d8f;
+            transition: all 0.3s ease;
           }
-          
-          .nav-btn svg {
+
+          .navbar-scrolled .nav-user-profile .user-avatar {
+            width: 32px;
+            height: 32px;
+          }
+
+          .nav-user-profile .user-avatar svg {
             width: 18px;
             height: 18px;
+            transition: all 0.3s ease;
           }
-          
-          .nav-badge {
-            min-width: 16px;
+
+          .navbar-scrolled .nav-user-profile .user-avatar svg {
+            width: 16px;
             height: 16px;
-            font-size: 0.5rem;
-            padding: 0 4px;
           }
-          
-          .nav-drawer {
-            width: 280px;
+
+          .nav-user-profile .user-name {
+            color: #1a2a3a;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
           }
-        }
-      `}</style>
 
-      {/* Main Nav Container */}
-      <div className="nav-container">
-        {/* Logo */}
-        <div className="nav-logo">
-          <img src={assets.Logo} alt="AquaHome" />
-        </div>
+          .navbar-scrolled .nav-user-profile .user-name {
+            font-size: 0.8rem;
+          }
 
-        {/* Desktop Navigation */}
-        <div className="nav-desktop">
-          <ul>
-            {navItems.map((item) => (
-              <li key={item}>
-                <a href={`/${item.toLowerCase()}`}>
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+          /* Drawer User Profile */
+          .drawer-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e8edf2;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
 
-        {/* Right Actions */}
-        <div className="nav-actions">
-          {/* Desktop Search */}
-          <div className="nav-search-desktop">
-            <input type="text" placeholder="Search products..." />
-            <Search className="search-icon" />
+          .drawer-user:hover {
+            background: rgba(42,157,143,0.06);
+            border-color: #2a9d8f;
+          }
+
+          .drawer-user .user-avatar {
+            width: 44px;
+            height: 44px;
+            background: rgba(42,157,143,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2a9d8f;
+          }
+
+          .drawer-user .user-avatar svg {
+            width: 22px;
+            height: 22px;
+          }
+
+          .drawer-user .user-info {
+            flex: 1;
+          }
+
+          .drawer-user .user-info .name {
+            color: #1a2a3a;
+            font-size: 0.95rem;
+            font-weight: 600;
+          }
+
+          .drawer-user .user-info .email {
+            color: #6b7b8b;
+            font-size: 0.8rem;
+          }
+
+          /* Responsive */
+          @media (max-width: 768px) {
+            .navbar-root {
+              height: 70px;
+            }
+            .navbar-scrolled {
+              height: 64px;
+            }
+            
+            .nav-container {
+              padding: 0 1rem;
+            }
+            
+            .nav-logo img {
+              height: 50px;
+            }
+            .navbar-scrolled .nav-logo img {
+              height: 40px;
+            }
+            
+            .nav-btn {
+              padding: 0.4rem;
+            }
+            
+            .nav-btn svg {
+              width: 22px;
+              height: 22px;
+            }
+            .navbar-scrolled .nav-btn svg {
+              width: 20px;
+              height: 20px;
+            }
+            
+            .nav-badge {
+              min-width: 18px;
+              height: 18px;
+              font-size: 0.5rem;
+              padding: 0 5px;
+            }
+            .navbar-scrolled .nav-badge {
+              min-width: 16px;
+              height: 16px;
+              font-size: 0.45rem;
+              padding: 0 4px;
+            }
+            
+            .nav-menu-toggle svg {
+              width: 26px;
+              height: 26px;
+            }
+            .navbar-scrolled .nav-menu-toggle svg {
+              width: 22px;
+              height: 22px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .navbar-root {
+              height: 60px;
+            }
+            .navbar-scrolled {
+              height: 56px;
+            }
+            
+            .nav-container {
+              padding: 0 0.75rem;
+            }
+            
+            .nav-logo img {
+              height: 42px;
+            }
+            .navbar-scrolled .nav-logo img {
+              height: 34px;
+            }
+            
+            .nav-btn {
+              padding: 0.35rem;
+            }
+            
+            .nav-btn svg {
+              width: 20px;
+              height: 20px;
+            }
+            .navbar-scrolled .nav-btn svg {
+              width: 18px;
+              height: 18px;
+            }
+            
+            .nav-badge {
+              min-width: 16px;
+              height: 16px;
+              font-size: 0.45rem;
+              padding: 0 4px;
+            }
+            .navbar-scrolled .nav-badge {
+              min-width: 14px;
+              height: 14px;
+              font-size: 0.4rem;
+              padding: 0 3px;
+            }
+            
+            .nav-drawer {
+              width: 280px;
+            }
+            
+            .nav-menu-toggle svg {
+              width: 24px;
+              height: 24px;
+            }
+            .navbar-scrolled .nav-menu-toggle svg {
+              width: 20px;
+              height: 20px;
+            }
+          }
+
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .navbar-root {
+              height: 75px;
+            }
+            .navbar-scrolled {
+              height: 68px;
+            }
+            
+            .nav-desktop ul {
+              gap: 1.5rem;
+            }
+            
+            .nav-desktop a {
+              font-size: 0.7rem;
+            }
+            
+            .nav-logo img {
+              height: 75px;
+            }
+            .navbar-scrolled .nav-logo img {
+              height: 55px;
+            }
+          }
+        `}</style>
+
+        {/* Main Nav Container */}
+        <div className="nav-container">
+          {/* Logo */}
+          <div className="nav-logo">
+            <img src={assets.Logo} alt="AquaHome" />
           </div>
 
-          {/* Mobile Search Toggle */}
-          <button
-            className="nav-btn md:hidden"
-            onClick={() => setSearchOpen(!searchOpen)}
-          >
-            <Search />
-          </button>
-
-          {/* Wishlist */}
-          <button className="nav-btn">
-            <Heart />
-            <span className="nav-badge nav-badge-heart">2</span>
-          </button>
-
-          {/* Cart */}
-          <button className="nav-btn">
-            <ShoppingCart />
-            <span className="nav-badge nav-badge-cart">5</span>
-          </button>
-
-          {/* Mobile Menu Toggle */}
-          <button
-            className="nav-menu-toggle"
-            onClick={() => setOpen(true)}
-          >
-            <Menu />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Search Bar */}
-      <AnimatePresence>
-        {searchOpen && (
-          <motion.div
-            className="nav-search-mobile"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="search-wrapper">
-              <input
-                type="text"
-                placeholder="Search products..."
-                autoFocus
-              />
-              <Search className="search-icon" />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Mobile Drawer Overlay */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="nav-drawer-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Mobile Drawer */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="nav-drawer"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.3 }}
-          >
-            <div className="nav-drawer-header">
-              <img src={assets.Logo} alt="AquaHome" />
-              <button className="nav-drawer-close" onClick={() => setOpen(false)}>
-                <X />
-              </button>
-            </div>
-
-            <div className="nav-drawer-body">
-              <ul>
-                {navItems.map((item) => (
+          {/* Desktop Navigation */}
+          <div className="nav-desktop">
+            <ul>
+              {navItems.map((item) => {
+                const path = item === "HOME" ? "/" : `/${item.toLowerCase()}`;
+                const isActive = location.pathname === path || 
+                  (item !== "HOME" && location.pathname.startsWith(path));
+                return (
                   <li key={item}>
-                    <a href={`/${item.toLowerCase()}`} onClick={() => setOpen(false)}>
+                    <Link to={path} className={isActive ? 'active' : ''}>
                       {item}
-                    </a>
+                    </Link>
                   </li>
-                ))}
-              </ul>
+                );
+              })}
+            </ul>
+          </div>
+
+          {/* Right Actions */}
+          <div className="nav-actions">
+            {/* User Profile */}
+            <div className="nav-user-profile" onClick={handleAuthClick}>
+              <div className="user-avatar">
+                <User />
+              </div>
+              <span className="user-name">Sign In</span>
             </div>
 
-            <div className="nav-drawer-footer">
-              <div className="drawer-item">
-                <span>Wishlist</span>
-                <span className="drawer-badge drawer-badge-heart">2 items</span>
+            {/* Wishlist */}
+            <button className="nav-btn" onClick={() => setWishlistModalOpen(true)}>
+              <Heart />
+              <span className="nav-badge nav-badge-heart">2</span>
+            </button>
+
+            {/* Cart */}
+            <button className="nav-btn" onClick={() => setCartModalOpen(true)}>
+              <ShoppingCart />
+              <span className="nav-badge nav-badge-cart">5</span>
+            </button>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              className="nav-menu-toggle"
+              onClick={() => setOpen(true)}
+            >
+              <Menu />
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Drawer Overlay */}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              className="nav-drawer-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOpen(false)}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Mobile Drawer */}
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              className="nav-drawer"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
+            >
+              <div className="nav-drawer-header">
+                <img src={assets.Logo} alt="AquaHome" />
+                <button className="nav-drawer-close" onClick={() => setOpen(false)}>
+                  <X />
+                </button>
               </div>
-              <div className="drawer-item">
-                <span>Cart</span>
-                <span className="drawer-badge drawer-badge-cart">5 items</span>
+
+              <div className="nav-drawer-body">
+                {/* User Profile in Drawer */}
+                <div className="drawer-user" onClick={() => {
+                  setOpen(false);
+                  handleAuthClick();
+                }}>
+                  <div className="user-avatar">
+                    <User />
+                  </div>
+                  <div className="user-info">
+                    <div className="name">Guest User</div>
+                    <div className="email">Sign in to your account</div>
+                  </div>
+                </div>
+
+                <ul>
+                  {navItems.map((item) => {
+                    const path = item === "HOME" ? "/" : `/${item.toLowerCase()}`;
+                    const isActive = location.pathname === path || 
+                      (item !== "HOME" && location.pathname.startsWith(path));
+                    return (
+                      <li key={item}>
+                        <Link 
+                          to={path}
+                          className={isActive ? 'active' : ''}
+                          onClick={() => setOpen(false)}
+                        >
+                          {item}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <div className="drawer-divider" />
+
+                {/* Quick Links */}
+                <ul>
+                  <li>
+                    <Link 
+                      to="/wishlist" 
+                      onClick={() => setOpen(false)}
+                      style={{ 
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        color: '#4a5a6a',
+                        fontSize: '0.85rem',
+                        fontWeight: '500',
+                        textDecoration: 'none',
+                        padding: '0.75rem 1rem',
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+                      <Heart size={20} />
+                      Wishlist (2)
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      to="/cart" 
+                      onClick={() => setOpen(false)}
+                      style={{ 
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        color: '#4a5a6a',
+                        fontSize: '0.85rem',
+                        fontWeight: '500',
+                        textDecoration: 'none',
+                        padding: '0.75rem 1rem',
+                        transition: 'all 0.3s ease'
+                      }}
+                    >
+                      <ShoppingCart size={20} />
+                      Cart (5)
+                    </Link>
+                  </li>
+                </ul>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+
+              <div className="nav-drawer-footer">
+                <div className="drawer-item" onClick={() => {
+                  setOpen(false);
+                  handleAuthClick();
+                }}>
+                  <span className="drawer-icon">
+                    <User size={20} />
+                    Account
+                  </span>
+                  <span className="drawer-badge">Sign In</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+
+      {/* Spacer to prevent content from hiding behind fixed navbar */}
+      <div style={{ height: '80px' }} className="navbar-spacer" />
+
+      {/* Auth Modal - Login Only */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+      />
+
+      {/* Cart Modal */}
+      <CartModal
+        isOpen={cartModalOpen}
+        onClose={() => setCartModalOpen(false)}
+      />
+
+      {/* Wishlist Modal */}
+      <WishListModal
+        isOpen={wishlistModalOpen}
+        onClose={() => setWishlistModalOpen(false)}
+      />
+    </>
   );
 };
 

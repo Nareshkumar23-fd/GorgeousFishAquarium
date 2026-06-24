@@ -2,7 +2,8 @@ import React, { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 /* ----------------------------------------------------------------
-   CONTACT — with Framer Motion animations
+   CONTACT — Unique design with NO BORDER RADIUS
+   Sharp edges, geometric patterns, industrial-chic aesthetic
 ------------------------------------------------------------------ */
 
 /* ── CONTACT INFO ── */
@@ -55,13 +56,15 @@ const Icon = ({ name, className = "" }) => {
     return <svg {...b} className={className}><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>;
   if (name === "fish")
     return <svg {...b} className={className}><path d="M2 12c3.5-4 8-6 13-6 2 0 4 .9 5.5 2.3-1 1.2-1 2.2 0 3.4C19 13.1 17 14 15 14c-5 0-9.5-2-13-2z"/><circle cx="15.5" cy="10.5" r="0.6" fill="currentColor" stroke="none"/><path d="M2 12l-1.5-2M2 12l-1.5 2"/></svg>;
+  if (name === "arrow")
+    return <svg {...b} className={className}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>;
   return null;
 };
 
-/* ── WAVE DIVIDER ── */
-const WaveDivider = () => (
-  <svg className="ct-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,32 C240,64 480,0 720,16 C960,32 1200,64 1440,32 L1440,60 L0,60 Z" style={{ fill: "var(--zbg)" }} />
+/* ── SHARP DIVIDER ── */
+const SharpDivider = () => (
+  <svg className="ct-sharp-divider" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+    <polygon points="0,0 1440,60 1440,0 0,0" style={{ fill: "var(--zbg)" }} />
   </svg>
 );
 
@@ -280,13 +283,15 @@ const ContactForm = () => {
 
 /* ── MAIN COMPONENT ── */
 const Contact = () => {
-  // Generate bubble data
-  const bubbles = Array.from({ length: 10 }, (_, i) => ({
+  // Generate geometric particles for hero
+  const particles = Array.from({ length: 24 }, (_, i) => ({
     id: i,
-    left: (i * 9.3 + 4) % 100,
-    size: 4 + (i % 4) * 3,
-    duration: 8 + (i % 5) * 2,
-    delay: i * 0.7,
+    left: (i * 4.2 + 2) % 100,
+    top: (i * 8.7 + 3) % 100,
+    size: 2 + (i % 4) * 2,
+    duration: 10 + (i % 5) * 2,
+    delay: i * 0.25,
+    rotation: (i * 43) % 360,
   }));
 
   // Trust signals data
@@ -301,23 +306,27 @@ const Contact = () => {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
+        /* ── NO BORDER RADIUS ANYWHERE ── */
+        .ct-root * {
+          border-radius: 0 !important;
+        }
+
         /* ── ROOT TOKENS ── */
         .ct-root {
-          --abyss:       #07151d;
-          --twilight:    #0c2630;
-          --reef:        #161229;
-          --midnight:    #050709;
-          --ink:         #0b2027;
-          --foam:        #eaf6f6;
-          --foam-dim:    rgba(234,246,246,0.66);
-          --aqua:        #4fd8c4;
-          --aqua-deep:   #0e8c7f;
-          --coral:       #ff8b5e;
-          --sun:         #f1faf8;
-          --current-bg:  #edf4fa;
-          --surface:     #e9f1ee;
-          --ledger-line: rgba(11,32,39,0.09);
-          --error:       #ff5e5e;
+          --abyss:       #0a0b12;
+          --deep:        #0f1724;
+          --ink:         #0b1a22;
+          --foam:        #e8f0f0;
+          --foam-dim:    rgba(232,240,240,0.6);
+          --aqua:        #2dd4bf;
+          --aqua-deep:   #0d9488;
+          --coral:       #f97316;
+          --gold:        #d97706;
+          --surface:     #f0f5f5;
+          --paper:       #ffffff;
+          --border-light: rgba(10,11,18,0.08);
+          --border-dark: rgba(232,240,240,0.12);
+          --error:       #ef4444;
 
           font-family: 'Plus Jakarta Sans', sans-serif;
           background: var(--abyss);
@@ -329,38 +338,51 @@ const Contact = () => {
 
         /* ── ZONE TOKENS ── */
         .ct-zone-dark {
-          --zbg: var(--twilight); --ztext: var(--foam); --ztext-dim: var(--foam-dim);
-          --zaccent: var(--aqua); --zborder: rgba(234,246,246,0.12);
-          --zcard-bg: linear-gradient(160deg,rgba(79,216,196,0.08),rgba(234,246,246,0.02));
-          --zicon-bg: rgba(79,216,196,0.14);
+          --zbg: var(--deep);
+          --ztext: var(--foam);
+          --ztext-dim: var(--foam-dim);
+          --zaccent: var(--aqua);
+          --zborder: var(--border-dark);
+          --zcard-bg: rgba(232,240,240,0.04);
+          --zicon-bg: rgba(45,212,191,0.12);
         }
         .ct-zone-light {
-          --zbg: var(--sun); --ztext: var(--ink); --ztext-dim: rgba(11,32,39,0.62);
-          --zaccent: var(--aqua-deep); --zborder: rgba(11,32,39,0.12);
-          --zcard-bg: #ffffff; --zicon-bg: rgba(14,140,127,0.10);
+          --zbg: var(--surface);
+          --ztext: var(--ink);
+          --ztext-dim: rgba(11,26,34,0.6);
+          --zaccent: var(--aqua-deep);
+          --zborder: var(--border-light);
+          --zcard-bg: var(--paper);
+          --zicon-bg: rgba(13,148,136,0.1);
         }
         .ct-zone-reef {
-          --zbg: var(--reef); --ztext: var(--foam); --ztext-dim: var(--foam-dim);
-          --zaccent: var(--coral); --zborder: rgba(255,139,94,0.22);
-          --zcard-bg: linear-gradient(160deg,rgba(255,139,94,0.08),rgba(234,246,246,0.02));
-          --zicon-bg: rgba(255,139,94,0.14);
+          --zbg: #111827;
+          --ztext: var(--foam);
+          --ztext-dim: var(--foam-dim);
+          --zaccent: var(--coral);
+          --zborder: rgba(249,115,22,0.2);
+          --zcard-bg: rgba(249,115,22,0.05);
+          --zicon-bg: rgba(249,115,22,0.12);
         }
         .ct-zone-midnight {
-          --zbg: var(--midnight); --ztext: #fff; --ztext-dim: rgba(255,255,255,0.55);
-          --zaccent: var(--aqua); --zborder: rgba(255,255,255,0.12);
+          --zbg: #05070c;
+          --ztext: #fff;
+          --ztext-dim: rgba(255,255,255,0.5);
+          --zaccent: var(--aqua);
+          --zborder: rgba(255,255,255,0.08);
         }
 
-        /* ── WAVE ── */
-        .ct-wave {
+        /* ── SHARP DIVIDER ── */
+        .ct-sharp-divider {
           position: absolute; top: 0; left: 0;
-          width: 100%; height: 56px;
+          width: 100%; height: 60px;
           transform: translateY(-99%);
           pointer-events: none; display: block;
         }
 
         /* ── SECTION BASE ── */
         .ct-section {
-          padding: 8rem 6vw 7rem;
+          padding: 7rem 6vw 6rem;
           position: relative;
           background: var(--zbg);
           color: var(--ztext);
@@ -372,7 +394,7 @@ const Contact = () => {
           display: flex; align-items: center; gap: 0.6rem;
           margin-bottom: 1rem;
         }
-        .ct-eyebrow::before { content:''; width:22px; height:1px; background:var(--zaccent); display:inline-block; }
+        .ct-eyebrow::before { content:''; width:28px; height:2px; background:var(--zaccent); display:inline-block; }
         .ct-section-title {
           font-size: clamp(1.8rem, 3.4vw, 2.6rem);
           font-weight: 650; line-height: 1.15;
@@ -387,90 +409,129 @@ const Contact = () => {
         .ct-hero {
           position: relative; min-height: 80svh;
           display: flex; align-items: flex-end; overflow: hidden;
-          background: linear-gradient(180deg, #020c1b 0%, #07151d 60%, #0a1e2e 100%);
+          background: linear-gradient(135deg, #0a0b12 0%, #0f1724 40%, #1a2535 100%);
         }
-        .ct-caustics {
-          position: absolute; inset:0;
-          mix-blend-mode: screen; opacity:0.35; pointer-events:none;
-          background:
-            radial-gradient(circle at 20% 30%,rgba(79,216,196,0.28),transparent 40%),
-            radial-gradient(circle at 76% 58%,rgba(79,216,196,0.18),transparent 44%),
-            radial-gradient(circle at 48% 80%,rgba(255,139,94,0.12),transparent 38%);
-          background-size:180% 180%;
-          animation:ct-caustics 16s ease-in-out infinite alternate;
+        
+        .ct-hero-grid {
+          position: absolute; inset: 0;
+          pointer-events: none;
+          background-image: 
+            linear-gradient(rgba(45,212,191,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(45,212,191,0.03) 1px, transparent 1px);
+          background-size: 60px 60px;
         }
-        @keyframes ct-caustics { 0%{background-position:0% 0%;} 100%{background-position:100% 60%;} }
-        .ct-bubble {
-          position:absolute; bottom:-10%; border-radius:50%;
-          background:rgba(234,246,246,0.18); pointer-events:none;
-          animation:ct-rise linear infinite;
+        
+        .ct-hero-grid::after {
+          content: '';
+          position: absolute; inset: 0;
+          background: 
+            radial-gradient(circle at 20% 30%, rgba(45,212,191,0.06), transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(249,115,22,0.04), transparent 40%);
         }
-        @keyframes ct-rise {
-          0%  { transform:translateY(0);       opacity:0;   }
-          10% {                                opacity:0.65;}
-          100%{ transform:translateY(-115vh);  opacity:0;   }
+
+        .ct-particle {
+          position: absolute;
+          border: 1px solid rgba(45,212,191,0.12);
+          pointer-events: none;
+          animation: ct-float linear infinite;
         }
+        
+        @keyframes ct-float {
+          0% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+          25% { opacity: 0.4; }
+          75% { opacity: 0.4; }
+          100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+
         .ct-hero-content {
           position:relative; z-index:2; width:100%;
-          padding: 0 6vw 7vh;
-          display:flex; justify-content:space-between; align-items:flex-end; gap:2rem;
+          padding: 0 6vw 8vh;
+          display:grid;
+          grid-template-columns: 1fr auto;
+          gap: 3rem;
+          align-items: end;
         }
+        
         .ct-hero-eyebrow {
-          font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em;
+          font-size:0.72rem; text-transform:uppercase; letter-spacing:0.14em;
           color:var(--aqua);
           display:flex; align-items:center; gap:0.6rem;
           margin-bottom:0.9rem;
         }
-        .ct-hero-eyebrow::before { content:''; width:22px; height:1px; background:var(--aqua); display:inline-block; }
+        .ct-hero-eyebrow::before { content:''; width:28px; height:2px; background:var(--aqua); display:inline-block; }
+        
         .ct-hero-title {
           font-family:'Fraunces',serif;
           font-size: clamp(2.2rem,5.5vw,4.6rem);
           font-weight:650; line-height:1.06;
           white-space:pre-line; max-width:14ch;
         }
+        
         .ct-hero-text {
           margin-top:1.1rem; max-width:36ch;
           color:var(--foam-dim); font-size:0.97rem; line-height:1.65;
         }
-        .ct-depth-badge {
-          flex-shrink:0;
-          display:flex; flex-direction:column; align-items:flex-end; gap:0.5rem;
+        
+        .ct-hero-meta {
+          display: flex; flex-direction: column;
+          align-items: flex-end; gap: 0.5rem;
+          flex-shrink: 0;
+          border-left: 2px solid var(--aqua);
+          padding-left: 1.5rem;
         }
-        .ct-depth-label { font-size:0.72rem; color:var(--foam-dim); font-family:'JetBrains Mono',monospace; letter-spacing:0.1em; }
-        .ct-depth-pill {
-          font-family:'JetBrains Mono',monospace; font-size:0.72rem;
-          padding:0.45rem 1rem; border-radius:999px;
-          border:1px solid var(--aqua); color:var(--abyss);
-          background:var(--aqua); font-weight:600;
+        
+        .ct-hero-meta .label {
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: var(--foam-dim);
         }
-        .ct-scroll-cue {
-          position:absolute; left:6vw; bottom:2rem; z-index:2;
-          display:flex; align-items:center; gap:0.5rem;
-          color:var(--foam-dim); font-size:0.68rem; letter-spacing:0.1em;
+        
+        .ct-hero-meta .value {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 1.4rem;
+          font-weight: 500;
+          color: var(--aqua);
         }
-        .ct-dot {
-          width:22px; height:34px;
-          border:1px solid rgba(234,246,246,0.4); border-radius:12px; position:relative;
+        
+        .ct-hero-meta .sub {
+          font-size: 0.75rem;
+          color: var(--foam-dim);
         }
-        .ct-dot::after {
-          content:''; position:absolute; top:6px; left:50%;
-          width:3px; height:7px; background:var(--aqua); border-radius:2px;
-          transform:translateX(-50%);
-          animation:ct-scrolldot 1.8s ease-in-out infinite;
+
+        .ct-scroll-indicator {
+          position: absolute; left: 6vw; bottom: 2rem; z-index: 2;
+          display: flex; align-items: center; gap: 0.6rem;
+          color: var(--foam-dim); font-size: 0.7rem;
+          letter-spacing: 0.1em;
         }
-        @keyframes ct-scrolldot { 0%,100%{top:6px;opacity:1;} 60%{top:16px;opacity:0.3;} }
+        
+        .ct-scroll-line {
+          width: 32px; height: 1px;
+          background: var(--aqua);
+          position: relative;
+        }
+        
+        .ct-scroll-line::after {
+          content: '';
+          position: absolute; right: 0; top: -3px;
+          width: 6px; height: 6px;
+          border-right: 1px solid var(--aqua);
+          border-top: 1px solid var(--aqua);
+          transform: rotate(45deg);
+          animation: ct-scrollarrow 1.8s ease-in-out infinite;
+        }
+        
+        @keyframes ct-scrollarrow {
+          0%, 100% { right: 0; opacity: 1; }
+          60% { right: -8px; opacity: 0.2; }
+        }
 
         /* ==================== 2. FORM ZONE ==================== */
-        .ct-sun { overflow:hidden; }
-        .ct-sun::after {
-          content:''; position:absolute; inset:0; pointer-events:none;
-          background:repeating-linear-gradient(115deg,rgba(14,140,127,0.05) 0px,rgba(14,140,127,0.05) 2px,transparent 2px,transparent 42px);
-        }
         .ct-split {
-          display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start;
+          display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:start;
           position:relative; z-index:1;
         }
-        .ct-split-head { margin-bottom:0; }
 
         /* — FORM ELEMENTS — */
         .ct-form { display:flex; flex-direction:column; gap:1.4rem; }
@@ -478,64 +539,63 @@ const Contact = () => {
         .ct-field { display:flex; flex-direction:column; gap:0.45rem; }
         .ct-label {
           font-size:0.68rem; text-transform:uppercase; letter-spacing:0.1em;
-          color:var(--ink); opacity:0.65;
+          color:var(--ztext-dim); 
         }
         .ct-input, .ct-textarea {
           width:100%;
-          background:#fff;
-          border:1.5px solid rgba(11,32,39,0.18);
-          border-radius:8px;
+          background:var(--paper);
+          border:1px solid var(--zborder);
           padding:0.78rem 1rem;
           font-family:'Plus Jakarta Sans',sans-serif;
           font-size:0.95rem;
-          color:var(--ink);
+          color:var(--ztext);
           transition:border-color 0.22s, box-shadow 0.22s;
           outline:none;
           resize:none;
         }
-        .ct-input::placeholder, .ct-textarea::placeholder { color:rgba(11,32,39,0.35); }
+        .ct-input::placeholder, .ct-textarea::placeholder { color:rgba(11,26,34,0.35); }
         .ct-input:focus, .ct-textarea:focus {
-          border-color:var(--aqua-deep);
-          box-shadow:0 0 0 3px rgba(14,140,127,0.12);
+          border-color:var(--zaccent);
+          box-shadow: inset 0 0 0 1px var(--zaccent);
         }
         .ct-field-error .ct-input,
         .ct-field-error .ct-textarea {
           border-color:var(--error);
-          box-shadow:0 0 0 3px rgba(255,94,94,0.1);
+          box-shadow: inset 0 0 0 1px var(--error);
         }
-        .ct-error-msg { font-size:0.76rem; color:var(--error); }
+        .ct-error-msg { font-size:0.76rem; color:var(--error); margin-top:0.2rem; }
 
         .ct-topic-grid { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.1rem; }
         .ct-topic-pill {
           padding:0.42rem 0.9rem;
-          background:rgba(11,32,39,0.06);
-          border:1.5px solid rgba(11,32,39,0.14);
-          border-radius:999px;
-          font-size:0.82rem; color:var(--ink); cursor:pointer;
+          background:rgba(11,26,34,0.04);
+          border:1px solid var(--zborder);
+          font-size:0.82rem; color:var(--ztext); cursor:pointer;
           transition:all 0.2s;
+          font-family:'Plus Jakarta Sans',sans-serif;
         }
-        .ct-topic-pill:hover { border-color:var(--aqua-deep); color:var(--aqua-deep); }
+        .ct-topic-pill:hover { border-color:var(--zaccent); color:var(--zaccent); }
         .ct-topic-active {
-          background:var(--aqua-deep) !important;
-          border-color:var(--aqua-deep) !important;
+          background:var(--zaccent) !important;
+          border-color:var(--zaccent) !important;
           color:#fff !important; font-weight:600;
         }
 
         .ct-submit-btn {
           display:inline-flex; align-items:center; justify-content:center; gap:0.55rem;
-          padding:0.9rem 2rem;
-          background:var(--aqua-deep); color:#fff;
+          padding:0.9rem 2.2rem;
+          background:var(--zaccent); color:#fff;
           font-size:0.9rem; font-weight:600; letter-spacing:0.04em;
-          border:none; border-radius:8px; cursor:pointer;
-          transition:opacity 0.2s, transform 0.2s;
+          border:none; cursor:pointer;
+          transition:all 0.2s ease;
           align-self:flex-start;
         }
-        .ct-submit-btn:hover:not(:disabled) { opacity:0.88; transform:translateY(-2px); }
+        .ct-submit-btn:hover:not(:disabled) { opacity:0.85; transform:translateY(-2px); }
         .ct-submit-btn:disabled { opacity:0.6; cursor:not-allowed; }
         .ct-submit-icon { width:16px; height:16px; }
 
         .ct-spinner {
-          width:18px; height:18px; border-radius:50%;
+          width:18px; height:18px;
           border:2px solid rgba(255,255,255,0.3);
           border-top-color:#fff;
           animation:ct-spin 0.7s linear infinite;
@@ -544,60 +604,88 @@ const Contact = () => {
 
         .ct-sent-state {
           display:flex; flex-direction:column; gap:1rem;
-          padding:2.5rem; background:#fff;
-          border:1.5px solid rgba(14,140,127,0.25);
-          border-radius:16px; text-align:center; align-items:center;
+          padding:2.5rem; background:var(--paper);
+          border:1px solid var(--zborder);
+          text-align:center; align-items:center;
         }
         .ct-sent-icon {
-          width:60px; height:60px; border-radius:50%;
-          background:rgba(14,140,127,0.1); color:var(--aqua-deep);
+          width:60px; height:60px;
+          background:var(--zicon-bg); color:var(--zaccent);
           display:flex; align-items:center; justify-content:center;
         }
         .ct-sent-fish { width:28px; height:28px; }
-        .ct-sent-title { font-size:1.4rem; font-weight:650; color:var(--ink); }
-        .ct-sent-body { font-size:0.9rem; line-height:1.65; color:rgba(11,32,39,0.65); max-width:34ch; }
+        .ct-sent-title { font-size:1.4rem; font-weight:650; color:var(--ztext); }
+        .ct-sent-body { font-size:0.9rem; line-height:1.65; color:var(--ztext-dim); max-width:34ch; }
         .ct-sent-reset {
-          margin-top:0.5rem; background:none; border:1.5px solid rgba(11,32,39,0.2);
-          border-radius:8px; padding:0.6rem 1.3rem;
-          font-size:0.82rem; color:var(--ink); cursor:pointer;
-          transition:border-color 0.2s;
+          margin-top:0.5rem; background:none; border:1px solid var(--zborder);
+          padding:0.6rem 1.3rem;
+          font-size:0.82rem; color:var(--ztext); cursor:pointer;
+          transition:all 0.2s;
+          font-family:'Plus Jakarta Sans',sans-serif;
         }
-        .ct-sent-reset:hover { border-color:var(--aqua-deep); color:var(--aqua-deep); }
+        .ct-sent-reset:hover { border-color:var(--zaccent); color:var(--zaccent); }
 
         /* ==================== 3. INFO CARDS ==================== */
-        .ct-reef-wrap { overflow:hidden; }
-        .ct-reef-wrap::after {
-          content:''; position:absolute; inset:0; pointer-events:none;
-          mix-blend-mode:screen; opacity:0.45;
-          background:
-            radial-gradient(circle at 10% 20%,rgba(255,139,94,0.28),transparent 38%),
-            radial-gradient(circle at 88% 70%,rgba(79,216,196,0.2),transparent 42%);
-          animation:ct-caustics 18s ease-in-out infinite alternate;
+        .ct-reef-wrap {
+          position:relative;
         }
+        
+        .ct-reef-wrap::before {
+          content: '';
+          position: absolute; inset: 0;
+          pointer-events: none;
+          background-image: 
+            linear-gradient(45deg, rgba(249,115,22,0.02) 1px, transparent 1px);
+          background-size: 40px 40px;
+        }
+        
         .ct-cards-grid {
-          display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem;
+          display:grid; grid-template-columns:repeat(4,1fr); gap:1rem;
           position:relative; z-index:1; margin-top:3rem;
         }
+        
         .ct-info-card {
           background:var(--zcard-bg);
           border:1px solid var(--zborder);
-          border-top:3px solid var(--zaccent);
-          border-radius:4px 4px 14px 14px;
-          padding:1.9rem 1.7rem;
-          transition:transform 0.3s ease, border-color 0.3s ease;
+          padding:2rem 1.7rem;
+          transition:all 0.3s ease;
           text-decoration:none; display:block;
           color:inherit;
+          position:relative;
         }
-        .ct-info-card:hover { transform:translateY(-5px); }
+        
+        .ct-info-card::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0;
+          height: 3px;
+          background: var(--zaccent);
+          opacity: 0.3;
+          transition: opacity 0.3s ease;
+        }
+        
+        .ct-info-card:hover::before {
+          opacity: 1;
+        }
+        
+        .ct-info-card:hover { transform:translateY(-4px); }
+        
         .ct-info-icon {
-          width:44px; height:44px; border-radius:12px;
+          width:44px; height:44px;
           background:var(--zicon-bg); color:var(--zaccent);
           display:flex; align-items:center; justify-content:center;
           margin-bottom:1.2rem;
         }
         .ct-info-icon svg { width:20px; height:20px; }
-        .ct-info-label { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--zaccent); margin-bottom:0.6rem; font-family:'JetBrains Mono',monospace; }
-        .ct-info-primary { font-family:'Fraunces',serif; font-size:1rem; font-weight:600; color:var(--ztext); line-height:1.4; margin-bottom:0.25rem; }
+        
+        .ct-info-label { 
+          font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; 
+          color:var(--zaccent); margin-bottom:0.6rem; 
+          font-family:'JetBrains Mono',monospace; 
+        }
+        .ct-info-primary { 
+          font-family:'Fraunces',serif; font-size:1rem; font-weight:600; 
+          color:var(--ztext); line-height:1.4; margin-bottom:0.25rem; 
+        }
         .ct-info-secondary { font-size:0.8rem; color:var(--ztext-dim); }
 
         /* ==================== 4. MAP ==================== */
@@ -607,66 +695,85 @@ const Contact = () => {
           z-index:1;
           padding:0;
         }
+        
         .ct-map-header {
           padding:4rem 6vw 2.5rem;
           display:flex; align-items:flex-end; justify-content:space-between; gap:2rem; flex-wrap:wrap;
         }
+        
         .ct-map-title { font-size:clamp(1.4rem,2.5vw,1.9rem); font-weight:650; color:#fff; }
-        .ct-map-coords { font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.1em; color:rgba(255,255,255,0.4); }
+        .ct-map-coords { font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.1em; color:rgba(255,255,255,0.3); }
+        
         .ct-map-frame {
           width:100%; height:480px;
           border:none; display:block;
-          filter: invert(90%) hue-rotate(180deg) saturate(0.7) brightness(0.85);
+          filter: invert(95%) hue-rotate(180deg) saturate(0.6) brightness(0.95);
         }
-        .ct-map-overlay-bar {
-          background:var(--twilight);
+        
+        .ct-map-overlay {
+          background:var(--deep);
           padding:1.6rem 6vw;
           display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
-          border-top:1px solid rgba(79,216,196,0.15);
+          border-top:1px solid rgba(45,212,191,0.12);
         }
+        
         .ct-map-addr { color:var(--foam); font-size:0.92rem; line-height:1.55; }
         .ct-map-addr strong { color:var(--aqua); display:block; font-family:'Fraunces',serif; font-size:1rem; margin-bottom:0.15rem; }
+        
         .ct-directions-btn {
           display:inline-flex; align-items:center; gap:0.5rem;
           padding:0.7rem 1.5rem;
           background:var(--aqua); color:var(--abyss);
           font-size:0.82rem; font-weight:700; letter-spacing:0.04em;
-          border:none; border-radius:8px; cursor:pointer; text-decoration:none;
-          transition:opacity 0.2s, transform 0.2s; flex-shrink:0;
+          border:none; cursor:pointer; text-decoration:none;
+          transition:all 0.2s ease; flex-shrink:0;
         }
-        .ct-directions-btn:hover { opacity:0.88; transform:translateY(-2px); }
+        .ct-directions-btn:hover { opacity:0.85; transform:translateY(-2px); }
 
         /* ── REDUCED MOTION ── */
         @media (prefers-reduced-motion:reduce) {
-          .ct-caustics, .ct-bubble, .ct-reef-wrap::after, .ct-spinner
-          { animation:none !important; }
+          .ct-particle, .ct-spinner { animation:none !important; }
         }
 
         /* ── RESPONSIVE ── */
-        @media (max-width:1024px) { .ct-cards-grid { grid-template-columns:repeat(2,1fr); } }
+        @media (max-width:1024px) { 
+          .ct-cards-grid { grid-template-columns:repeat(2,1fr); } 
+        }
+        
         @media (max-width:900px) {
           .ct-split { grid-template-columns:1fr; gap:3rem; }
-          .ct-hero-content { flex-direction:column; align-items:flex-start; }
-          .ct-section { padding:6rem 6vw; }
+          .ct-hero-content { grid-template-columns:1fr; gap:1.5rem; }
+          .ct-hero-meta { flex-direction:row; border-left:none; border-top:2px solid var(--aqua); padding-left:0; padding-top:1rem; align-items:center; flex-wrap:wrap; }
+          .ct-section { padding:5rem 6vw; }
           .ct-map-frame { height:360px; }
+          .ct-map-header { flex-direction:column; align-items:flex-start; }
         }
+        
         @media (max-width:600px) {
           .ct-field-row { grid-template-columns:1fr; }
           .ct-cards-grid { grid-template-columns:1fr; }
+          .ct-map-overlay { flex-direction:column; align-items:flex-start; }
         }
       `}</style>
 
       {/* ==================== 1. HERO ==================== */}
       <section className="ct-hero">
-        <div className="ct-caustics" />
-        {bubbles.map((b) => (
-          <span key={b.id} className="ct-bubble" style={{
-            left: `${b.left}%`,
-            width: `${b.size}px`,
-            height: `${b.size}px`,
-            animationDuration: `${b.duration}s`,
-            animationDelay: `${b.delay}s`,
-          }} />
+        <div className="ct-hero-grid" />
+        
+        {particles.map((p) => (
+          <span
+            key={p.id}
+            className="ct-particle"
+            style={{
+              left: `${p.left}%`,
+              top: `${p.top}%`,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              animationDuration: `${p.duration}s`,
+              animationDelay: `${p.delay}s`,
+              transform: `rotate(${p.rotation}deg)`,
+            }}
+          />
         ))}
 
         <motion.div 
@@ -683,30 +790,31 @@ const Contact = () => {
             </p>
           </div>
           <motion.div 
-            className="ct-depth-badge"
+            className="ct-hero-meta"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
           >
-            <span className="ct-depth-label fm">location</span>
-            <span className="ct-depth-pill fm">Madurai, IN</span>
+            <span className="label">Location</span>
+            <span className="value">Madurai</span>
+            <span className="sub">Tamil Nadu, India</span>
           </motion.div>
         </motion.div>
 
-        <div className="ct-scroll-cue">
-          <span className="ct-dot" />
-          <span className="fm">SCROLL</span>
+        <div className="ct-scroll-indicator">
+          <span className="ct-scroll-line" />
+          <span className="fm">Scroll</span>
         </div>
       </section>
 
-      {/* ==================== 2. FORM — Sunlight Zone ==================== */}
-      <section className="ct-section ct-zone-light ct-sun">
-        <WaveDivider />
+      {/* ==================== 2. FORM ==================== */}
+      <section className="ct-section ct-zone-light">
+        <SharpDivider />
         <div className="ct-split">
           {/* Left: heading */}
           <Reveal>
-            <div className="ct-split-head">
-              <div className="ct-eyebrow fm">Sunlight Zone · Send a Message</div>
+            <div>
+              <div className="ct-eyebrow fm">Send a Message</div>
               <h2 className="ct-section-title fd">What can we help with?</h2>
               <p className="ct-section-sub">
                 Fill in the form and one of our aquarists — not a bot — will reply within the hour for live fish queries, and by end of day for everything else.
@@ -723,8 +831,8 @@ const Contact = () => {
                     transition={{ delay: 0.2 + i * 0.1 }}
                   >
                     <motion.span style={{
-                      width:20, height:20, borderRadius:"50%",
-                      background:"rgba(14,140,127,0.12)", color:"var(--aqua-deep)",
+                      width:20, height:20,
+                      background:"rgba(13,148,136,0.12)", color:"var(--aqua-deep)",
                       display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0,
                     }}
                     initial={{ scale: 0 }}
@@ -735,7 +843,7 @@ const Contact = () => {
                         <path d="M20 6L9 17l-5-5"/>
                       </svg>
                     </motion.span>
-                    <span style={{ fontSize:"0.86rem", color:"rgba(11,32,39,0.65)", lineHeight:1.5 }}>{t}</span>
+                    <span style={{ fontSize:"0.86rem", color:"rgba(11,26,34,0.65)", lineHeight:1.5 }}>{t}</span>
                   </motion.div>
                 ))}
               </div>
@@ -751,10 +859,10 @@ const Contact = () => {
 
       {/* ==================== 3. INFO CARDS ==================== */}
       <section className="ct-section ct-zone-reef ct-reef-wrap">
-        <WaveDivider />
+        <SharpDivider />
         <Reveal>
           <div>
-            <div className="ct-eyebrow fm">The Reef · Find Us</div>
+            <div className="ct-eyebrow fm">Find Us</div>
             <h2 className="ct-section-title fd">Four ways to reach us</h2>
           </div>
         </Reveal>
@@ -768,7 +876,7 @@ const Contact = () => {
                   as={El}
                   className="ct-info-card"
                   {...props}
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -4 }}
                   transition={{ duration: 0.3 }}
                 >
                   <motion.div 
@@ -790,11 +898,11 @@ const Contact = () => {
 
       {/* ==================== 4. LIVE MAP ==================== */}
       <section className="ct-map-section ct-zone-midnight">
-        <WaveDivider />
+        <SharpDivider />
         <Reveal>
           <div className="ct-map-header">
             <div>
-              <div className="ct-eyebrow fm" style={{ "--zbg": "var(--midnight)", "--zaccent": "var(--aqua)" }}>Midnight Zone · Live Location</div>
+              <div className="ct-eyebrow fm" style={{ "--zbg": "var(--midnight)", "--zaccent": "var(--aqua)" }}>Live Location</div>
               <h2 className="ct-map-title fd">We're in Bethaniyapuram</h2>
             </div>
             <span className="ct-map-coords fm">9.9361° N · 78.0943° E</span>
@@ -814,7 +922,7 @@ const Contact = () => {
         />
 
         <motion.div 
-          className="ct-map-overlay-bar"
+          className="ct-map-overlay"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -831,9 +939,7 @@ const Contact = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{width:15,height:15}}>
-              <polygon points="3 11 22 2 13 21 11 13 3 11"/>
-            </svg>
+            <Icon name="arrow" style={{width:15,height:15}} />
             Get Directions
           </motion.a>
         </motion.div>
